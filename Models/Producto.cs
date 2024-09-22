@@ -32,7 +32,6 @@ namespace TiendaOnline.Models
         public int Stock { get; set; }
         [Required]
         [StringLength(100)]
-        public string? Marca {  get; set; }
         [Required]
         public bool Activo { get; set; }
         [Required]
