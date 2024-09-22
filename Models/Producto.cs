@@ -8,34 +8,35 @@ namespace TiendaOnline.Models
         [Key]
         public int ProductoId { get; set; }
         [Required]
-        [StringLength(100)]
-        public string? Codigo { get; set; }
+        [StringLength(50)]
+        public required string Codigo { get; set; }
+        [Required(ErrorMessage = "El campo Nombre es obligatorio!")]
+        [StringLength(255)]
+        public required string Nombre { get; set; }
         [Required]
         [StringLength(255)]
-        public string? Nombre { get; set; }
+        public required string Modelo { get; set; }
         [Required]
-        [StringLength(255)]
-        public string? Modelo { get; set; }
-        [Required]
-        [StringLength(1000)]
-        public string? Descripcion { get; set; }
+        [StringLength(500)]
+        public required string Descripcion { get; set; }
         [Required]
         public decimal Precio { get; set; }
         [Required]
         [StringLength(255)]
-        public string? Imagen { get; set; }
+        public required string Imagen { get; set; }
         [Required]
         public int CategoriaId { get; set; }
         [ForeignKey("CategoriaId")]
-        public Categoria? Categoria { get; set; }
+        public required Categoria Categoria { get; set; }
         [Required]
         public int Stock { get; set; }
         [Required]
         [StringLength(100)]
+        public required string Marca {  get; set; }
         [Required]
         public bool Activo { get; set; }
         [Required]
         [StringLength(100)]
-        public ICollection<Detalle_Pedido>? Detalle_Pedido { get; set; }
+        public required ICollection<Detalle_Pedido> Detalles_Pedido { get; set; }
     }
 }
