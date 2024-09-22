@@ -6,23 +6,22 @@ using TiendaOnline.Models;
 
 namespace TiendaOnline.Controllers
 {
-    public class UsuariosController : Controller
+    public class RolesController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public UsuariosController(ApplicationDbContext context)
+        public RolesController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Usuarios
+        // GET: Roles
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Usuarios.Include(u => u.Rol);
-            return View(await applicationDbContext.ToListAsync());
+            return View(await _context.Rol.ToListAsync());
         }
 
-        // GET: Usuarios/Details/5
+        // GET: Roles/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -30,42 +29,39 @@ namespace TiendaOnline.Controllers
                 return NotFound();
             }
 
-            var usuario = await _context.Usuarios
-                .Include(u => u.Rol)
-                .FirstOrDefaultAsync(m => m.UsuarioId == id);
-            if (usuario == null)
+            var rol = await _context.Rol
+                .FirstOrDefaultAsync(m => m.RolId == id);
+            if (rol == null)
             {
                 return NotFound();
             }
 
-            return View(usuario);
+            return View(rol);
         }
 
-        // GET: Usuarios/Create
+        // GET: Roles/Create
         public IActionResult Create()
         {
-            ViewData["RolId"] = new SelectList(_context.Set<Rol>(), "RolId", "Nombre");
             return View();
         }
 
-        // POST: Usuarios/Create
+        // POST: Roles/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UsuarioId,Nombre,Telefono,NombreUsuario,Contrasenia,Correo,Domicilio,Estado,CodigoPostal,RolId")] Usuario usuario)
+        public async Task<IActionResult> Create([Bind("RolId,Nombre")] Rol rol)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(usuario);
+                _context.Add(rol);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RolId"] = new SelectList(_context.Set<Rol>(), "RolId", "Nombre", usuario.RolId);
-            return View(usuario);
+            return View(rol);
         }
 
-        // GET: Usuarios/Edit/5
+        // GET: Roles/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -73,23 +69,22 @@ namespace TiendaOnline.Controllers
                 return NotFound();
             }
 
-            var usuario = await _context.Usuarios.FindAsync(id);
-            if (usuario == null)
+            var rol = await _context.Rol.FindAsync(id);
+            if (rol == null)
             {
                 return NotFound();
             }
-            ViewData["RolId"] = new SelectList(_context.Set<Rol>(), "RolId", "Nombre", usuario.RolId);
-            return View(usuario);
+            return View(rol);
         }
 
-        // POST: Usuarios/Edit/5
+        // POST: Roles/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UsuarioId,Nombre,Telefono,NombreUsuario,Contrasenia,Correo,Domicilio,Estado,CodigoPostal,RolId")] Usuario usuario)
+        public async Task<IActionResult> Edit(int id, [Bind("RolId,Nombre")] Rol rol)
         {
-            if (id != usuario.UsuarioId)
+            if (id != rol.RolId)
             {
                 return NotFound();
             }
@@ -98,12 +93,12 @@ namespace TiendaOnline.Controllers
             {
                 try
                 {
-                    _context.Update(usuario);
+                    _context.Update(rol);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!UsuarioExists(usuario.UsuarioId))
+                    if (!RolExists(rol.RolId))
                     {
                         return NotFound();
                     }
@@ -114,11 +109,10 @@ namespace TiendaOnline.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RolId"] = new SelectList(_context.Set<Rol>(), "RolId", "Nombre", usuario.RolId);
-            return View(usuario);
+            return View(rol);
         }
 
-        // GET: Usuarios/Delete/5
+        // GET: Roles/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -126,35 +120,34 @@ namespace TiendaOnline.Controllers
                 return NotFound();
             }
 
-            var usuario = await _context.Usuarios
-                .Include(u => u.Rol)
-                .FirstOrDefaultAsync(m => m.UsuarioId == id);
-            if (usuario == null)
+            var rol = await _context.Rol
+                .FirstOrDefaultAsync(m => m.RolId == id);
+            if (rol == null)
             {
                 return NotFound();
             }
 
-            return View(usuario);
+            return View(rol);
         }
 
-        // POST: Usuarios/Delete/5
+        // POST: Roles/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var usuario = await _context.Usuarios.FindAsync(id);
-            if (usuario != null)
+            var rol = await _context.Rol.FindAsync(id);
+            if (rol != null)
             {
-                _context.Usuarios.Remove(usuario);
+                _context.Rol.Remove(rol);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool UsuarioExists(int id)
+        private bool RolExists(int id)
         {
-            return _context.Usuarios.Any(e => e.UsuarioId == id);
+            return _context.Rol.Any(e => e.RolId == id);
         }
     }
 }

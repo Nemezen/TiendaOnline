@@ -6,23 +6,23 @@ using TiendaOnline.Models;
 
 namespace TiendaOnline.Controllers
 {
-    public class UsuariosController : Controller
+    public class PedidosController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public UsuariosController(ApplicationDbContext context)
+        public PedidosController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Usuarios
+        // GET: Pedidos
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Usuarios.Include(u => u.Rol);
+            var applicationDbContext = _context.Pedidos.Include(p => p.Usuario);
             return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Usuarios/Details/5
+        // GET: Pedidos/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -30,42 +30,42 @@ namespace TiendaOnline.Controllers
                 return NotFound();
             }
 
-            var usuario = await _context.Usuarios
-                .Include(u => u.Rol)
-                .FirstOrDefaultAsync(m => m.UsuarioId == id);
-            if (usuario == null)
+            var pedido = await _context.Pedidos
+                .Include(p => p.Usuario)
+                .FirstOrDefaultAsync(m => m.PedidoId == id);
+            if (pedido == null)
             {
                 return NotFound();
             }
 
-            return View(usuario);
+            return View(pedido);
         }
 
-        // GET: Usuarios/Create
+        // GET: Pedidos/Create
         public IActionResult Create()
         {
-            ViewData["RolId"] = new SelectList(_context.Set<Rol>(), "RolId", "Nombre");
+            ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "UsuarioId", "CodigoPostal");
             return View();
         }
 
-        // POST: Usuarios/Create
+        // POST: Pedidos/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UsuarioId,Nombre,Telefono,NombreUsuario,Contrasenia,Correo,Domicilio,Estado,CodigoPostal,RolId")] Usuario usuario)
+        public async Task<IActionResult> Create([Bind("PedidoId,UsuarioId,Fecha,Estado,DireccionIdSeleccionada,Total")] Pedido pedido)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(usuario);
+                _context.Add(pedido);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RolId"] = new SelectList(_context.Set<Rol>(), "RolId", "Nombre", usuario.RolId);
-            return View(usuario);
+            ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "UsuarioId", "CodigoPostal", pedido.UsuarioId);
+            return View(pedido);
         }
 
-        // GET: Usuarios/Edit/5
+        // GET: Pedidos/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -73,23 +73,23 @@ namespace TiendaOnline.Controllers
                 return NotFound();
             }
 
-            var usuario = await _context.Usuarios.FindAsync(id);
-            if (usuario == null)
+            var pedido = await _context.Pedidos.FindAsync(id);
+            if (pedido == null)
             {
                 return NotFound();
             }
-            ViewData["RolId"] = new SelectList(_context.Set<Rol>(), "RolId", "Nombre", usuario.RolId);
-            return View(usuario);
+            ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "UsuarioId", "CodigoPostal", pedido.UsuarioId);
+            return View(pedido);
         }
 
-        // POST: Usuarios/Edit/5
+        // POST: Pedidos/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UsuarioId,Nombre,Telefono,NombreUsuario,Contrasenia,Correo,Domicilio,Estado,CodigoPostal,RolId")] Usuario usuario)
+        public async Task<IActionResult> Edit(int id, [Bind("PedidoId,UsuarioId,Fecha,Estado,DireccionIdSeleccionada,Total")] Pedido pedido)
         {
-            if (id != usuario.UsuarioId)
+            if (id != pedido.PedidoId)
             {
                 return NotFound();
             }
@@ -98,12 +98,12 @@ namespace TiendaOnline.Controllers
             {
                 try
                 {
-                    _context.Update(usuario);
+                    _context.Update(pedido);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!UsuarioExists(usuario.UsuarioId))
+                    if (!PedidoExists(pedido.PedidoId))
                     {
                         return NotFound();
                     }
@@ -114,11 +114,11 @@ namespace TiendaOnline.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RolId"] = new SelectList(_context.Set<Rol>(), "RolId", "Nombre", usuario.RolId);
-            return View(usuario);
+            ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "UsuarioId", "CodigoPostal", pedido.UsuarioId);
+            return View(pedido);
         }
 
-        // GET: Usuarios/Delete/5
+        // GET: Pedidos/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -126,35 +126,35 @@ namespace TiendaOnline.Controllers
                 return NotFound();
             }
 
-            var usuario = await _context.Usuarios
-                .Include(u => u.Rol)
-                .FirstOrDefaultAsync(m => m.UsuarioId == id);
-            if (usuario == null)
+            var pedido = await _context.Pedidos
+                .Include(p => p.Usuario)
+                .FirstOrDefaultAsync(m => m.PedidoId == id);
+            if (pedido == null)
             {
                 return NotFound();
             }
 
-            return View(usuario);
+            return View(pedido);
         }
 
-        // POST: Usuarios/Delete/5
+        // POST: Pedidos/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var usuario = await _context.Usuarios.FindAsync(id);
-            if (usuario != null)
+            var pedido = await _context.Pedidos.FindAsync(id);
+            if (pedido != null)
             {
-                _context.Usuarios.Remove(usuario);
+                _context.Pedidos.Remove(pedido);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool UsuarioExists(int id)
+        private bool PedidoExists(int id)
         {
-            return _context.Usuarios.Any(e => e.UsuarioId == id);
+            return _context.Pedidos.Any(e => e.PedidoId == id);
         }
     }
 }

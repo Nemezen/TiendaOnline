@@ -6,23 +6,23 @@ using TiendaOnline.Models;
 
 namespace TiendaOnline.Controllers
 {
-    public class UsuariosController : Controller
+    public class DireccionesController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public UsuariosController(ApplicationDbContext context)
+        public DireccionesController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Usuarios
+        // GET: Direcciones
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Usuarios.Include(u => u.Rol);
+            var applicationDbContext = _context.Direcciones.Include(d => d.Usuario);
             return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Usuarios/Details/5
+        // GET: Direcciones/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -30,42 +30,42 @@ namespace TiendaOnline.Controllers
                 return NotFound();
             }
 
-            var usuario = await _context.Usuarios
-                .Include(u => u.Rol)
-                .FirstOrDefaultAsync(m => m.UsuarioId == id);
-            if (usuario == null)
+            var direccion = await _context.Direcciones
+                .Include(d => d.Usuario)
+                .FirstOrDefaultAsync(m => m.DireccionId == id);
+            if (direccion == null)
             {
                 return NotFound();
             }
 
-            return View(usuario);
+            return View(direccion);
         }
 
-        // GET: Usuarios/Create
+        // GET: Direcciones/Create
         public IActionResult Create()
         {
-            ViewData["RolId"] = new SelectList(_context.Set<Rol>(), "RolId", "Nombre");
+            ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "UsuarioId", "CodigoPostal");
             return View();
         }
 
-        // POST: Usuarios/Create
+        // POST: Direcciones/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UsuarioId,Nombre,Telefono,NombreUsuario,Contrasenia,Correo,Domicilio,Estado,CodigoPostal,RolId")] Usuario usuario)
+        public async Task<IActionResult> Create([Bind("DireccionId,Domicilio,Estado,CodigoPostal,UsuarioId")] Direccion direccion)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(usuario);
+                _context.Add(direccion);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RolId"] = new SelectList(_context.Set<Rol>(), "RolId", "Nombre", usuario.RolId);
-            return View(usuario);
+            ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "UsuarioId", "CodigoPostal", direccion.UsuarioId);
+            return View(direccion);
         }
 
-        // GET: Usuarios/Edit/5
+        // GET: Direcciones/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -73,23 +73,23 @@ namespace TiendaOnline.Controllers
                 return NotFound();
             }
 
-            var usuario = await _context.Usuarios.FindAsync(id);
-            if (usuario == null)
+            var direccion = await _context.Direcciones.FindAsync(id);
+            if (direccion == null)
             {
                 return NotFound();
             }
-            ViewData["RolId"] = new SelectList(_context.Set<Rol>(), "RolId", "Nombre", usuario.RolId);
-            return View(usuario);
+            ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "UsuarioId", "CodigoPostal", direccion.UsuarioId);
+            return View(direccion);
         }
 
-        // POST: Usuarios/Edit/5
+        // POST: Direcciones/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UsuarioId,Nombre,Telefono,NombreUsuario,Contrasenia,Correo,Domicilio,Estado,CodigoPostal,RolId")] Usuario usuario)
+        public async Task<IActionResult> Edit(int id, [Bind("DireccionId,Domicilio,Estado,CodigoPostal,UsuarioId")] Direccion direccion)
         {
-            if (id != usuario.UsuarioId)
+            if (id != direccion.DireccionId)
             {
                 return NotFound();
             }
@@ -98,12 +98,12 @@ namespace TiendaOnline.Controllers
             {
                 try
                 {
-                    _context.Update(usuario);
+                    _context.Update(direccion);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!UsuarioExists(usuario.UsuarioId))
+                    if (!DireccionExists(direccion.DireccionId))
                     {
                         return NotFound();
                     }
@@ -114,11 +114,11 @@ namespace TiendaOnline.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RolId"] = new SelectList(_context.Set<Rol>(), "RolId", "Nombre", usuario.RolId);
-            return View(usuario);
+            ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "UsuarioId", "CodigoPostal", direccion.UsuarioId);
+            return View(direccion);
         }
 
-        // GET: Usuarios/Delete/5
+        // GET: Direcciones/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -126,35 +126,35 @@ namespace TiendaOnline.Controllers
                 return NotFound();
             }
 
-            var usuario = await _context.Usuarios
-                .Include(u => u.Rol)
-                .FirstOrDefaultAsync(m => m.UsuarioId == id);
-            if (usuario == null)
+            var direccion = await _context.Direcciones
+                .Include(d => d.Usuario)
+                .FirstOrDefaultAsync(m => m.DireccionId == id);
+            if (direccion == null)
             {
                 return NotFound();
             }
 
-            return View(usuario);
+            return View(direccion);
         }
 
-        // POST: Usuarios/Delete/5
+        // POST: Direcciones/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var usuario = await _context.Usuarios.FindAsync(id);
-            if (usuario != null)
+            var direccion = await _context.Direcciones.FindAsync(id);
+            if (direccion != null)
             {
-                _context.Usuarios.Remove(usuario);
+                _context.Direcciones.Remove(direccion);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool UsuarioExists(int id)
+        private bool DireccionExists(int id)
         {
-            return _context.Usuarios.Any(e => e.UsuarioId == id);
+            return _context.Direcciones.Any(e => e.DireccionId == id);
         }
     }
 }

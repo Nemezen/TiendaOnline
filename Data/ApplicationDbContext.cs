@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System.Runtime.Intrinsics.Arm;
 using TiendaOnline.Models;
 
@@ -47,5 +47,6 @@ namespace TiendaOnline.Data
                 .OnDelete(DeleteBehavior.Restrict);//Al eliminar una categoria, no se eliminan los productos asociados a categoria
    
         }
+        public DbSet<TiendaOnline.Models.Rol> Rol { get; set; } = default!;
     }
 }
