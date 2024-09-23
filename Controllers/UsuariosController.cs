@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -44,7 +48,7 @@ namespace TiendaOnline.Controllers
         // GET: Usuarios/Create
         public IActionResult Create()
         {
-            ViewData["RolId"] = new SelectList(_context.Set<Rol>(), "RolId", "Nombre");
+            ViewData["RolId"] = new SelectList(_context.Roles, "RolId", "Nombre");
             return View();
         }
 
@@ -55,13 +59,25 @@ namespace TiendaOnline.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("UsuarioId,Nombre,Telefono,NombreUsuario,Contrasenia,Correo,Domicilio,Estado,CodigoPostal,RolId")] Usuario usuario)
         {
-            if (ModelState.IsValid)
+            var rol = await _context.Roles.Where(d => d.RolId == usuario.RolId).FirstOrDefaultAsync();
+            if (rol!=null)
             {
+                usuario.Rol = rol;
+                usuario.Direcciones = new List<Direccion>
+                {
+                    new Direccion
+                    {
+                        Domicilio = usuario.Domicilio,
+                        Estado = usuario.Estado,
+                        CodigoPostal =  usuario.CodigoPostal
+                    }
+                };
+
                 _context.Add(usuario);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RolId"] = new SelectList(_context.Set<Rol>(), "RolId", "Nombre", usuario.RolId);
+            ViewData["RolId"] = new SelectList(_context.Roles, "RolId", "Nombre", usuario.RolId);
             return View(usuario);
         }
 
@@ -78,7 +94,7 @@ namespace TiendaOnline.Controllers
             {
                 return NotFound();
             }
-            ViewData["RolId"] = new SelectList(_context.Set<Rol>(), "RolId", "Nombre", usuario.RolId);
+            ViewData["RolId"] = new SelectList(_context.Roles, "RolId", "Nombre", usuario.RolId);
             return View(usuario);
         }
 
@@ -114,7 +130,7 @@ namespace TiendaOnline.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RolId"] = new SelectList(_context.Set<Rol>(), "RolId", "Nombre", usuario.RolId);
+            ViewData["RolId"] = new SelectList(_context.Roles, "RolId", "Nombre", usuario.RolId);
             return View(usuario);
         }
 

@@ -1,6 +1,11 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using TiendaOnline.Data;
 using TiendaOnline.Models;
 
@@ -14,7 +19,36 @@ namespace TiendaOnline.Controllers
         {
             _context = context;
         }
+        public IActionResult ObtenerPedidos()
+        {
+            var pedidos = _context.Pedidos
+                .Select(p => new
+                {
+                    PedidoId = p.PedidoId,
+                    UsuarioId = p.UsuarioId,
+                    UsuarioNombre = p.Usuario.Nombre, // Asumiendo que Usuario tiene una propiedad "Nombre"
+                    Fecha = p.Fecha,
+                    Estado = p.Estado,
+                    Direccion = p.Direccion.Domicilio, // Ajusta según las propiedades de Direccion
+                    Total = p.Total,
+                    Detalles = p.Detalles_Pedido.Select(d => new
+                    {
+                        ProductoImagen = d.Producto.Imagen,
+                        DetallePedidoId = d.DetallePedidoId,
+                        ProductoId = d.ProductoId,
+                        ProductoNombre = d.Producto.Nombre, // Asumiendo que Producto tiene una propiedad "Nombre"
+                        ProductoCodigo = d.Producto.Codigo,
+                        ProductoModelo = d.Producto.Modelo,
+                        ProductoPrecio= d.Producto.Precio,
+                        Cantidad = d.Cantidad,
+                        Precio = d.Precio
+                    }).ToList()
+                })
+                .ToList();
 
+            var jsonResult = JsonConvert.SerializeObject(pedidos);
+            return Json(jsonResult); // Devuelve los datos en formato JSON
+        }
         // GET: Pedidos
         public async Task<IActionResult> Index()
         {

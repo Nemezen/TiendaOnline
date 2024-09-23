@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -18,7 +22,7 @@ namespace TiendaOnline.Controllers
         // GET: Roles
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Rol.ToListAsync());
+            return View(await _context.Roles.ToListAsync());
         }
 
         // GET: Roles/Details/5
@@ -29,7 +33,7 @@ namespace TiendaOnline.Controllers
                 return NotFound();
             }
 
-            var rol = await _context.Rol
+            var rol = await _context.Roles
                 .FirstOrDefaultAsync(m => m.RolId == id);
             if (rol == null)
             {
@@ -69,7 +73,7 @@ namespace TiendaOnline.Controllers
                 return NotFound();
             }
 
-            var rol = await _context.Rol.FindAsync(id);
+            var rol = await _context.Roles.FindAsync(id);
             if (rol == null)
             {
                 return NotFound();
@@ -120,7 +124,7 @@ namespace TiendaOnline.Controllers
                 return NotFound();
             }
 
-            var rol = await _context.Rol
+            var rol = await _context.Roles
                 .FirstOrDefaultAsync(m => m.RolId == id);
             if (rol == null)
             {
@@ -135,10 +139,10 @@ namespace TiendaOnline.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var rol = await _context.Rol.FindAsync(id);
+            var rol = await _context.Roles.FindAsync(id);
             if (rol != null)
             {
-                _context.Rol.Remove(rol);
+                _context.Roles.Remove(rol);
             }
 
             await _context.SaveChangesAsync();
@@ -147,7 +151,7 @@ namespace TiendaOnline.Controllers
 
         private bool RolExists(int id)
         {
-            return _context.Rol.Any(e => e.RolId == id);
+            return _context.Roles.Any(e => e.RolId == id);
         }
     }
 }

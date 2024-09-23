@@ -12,7 +12,7 @@ namespace TiendaOnline.Models
         [ForeignKey("UsuarioId")]
         public required Usuario Usuario { get; set; }
         [Required]
-        public DateTime Fecha {  get; set; }    
+        public required DateTime Fecha {  get; set; }    
         [Required]
         public required string Estado { get; set; }
         [Required]
@@ -21,6 +21,6 @@ namespace TiendaOnline.Models
         public required Direccion Direccion { get; set; }
         [Required]
         public decimal Total { get; set; }
-        public ICollection<Detalle_Pedido>? Detalles_Pedido { get; set; }
+        public required ICollection<Detalle_Pedido> Detalles_Pedido { get; set; }
     }
 }

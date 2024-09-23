@@ -11,11 +11,11 @@ namespace TiendaOnline.Models
         [Required]
         public int PedidoId { get; set; }
         [ForeignKey("PedidoId")]
-        public Pedido Pedido { get; set; }
+        public required Pedido Pedido { get; set; }
         [Required]
         public int ProductoId { get; set; } 
         [ForeignKey("ProductoId")]
-        public Producto Producto { get; set; }
+        public required Producto Producto { get; set; }
         public int Cantidad { get; set; }   
         [Required]
         public decimal Precio { get; set; }
