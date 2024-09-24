@@ -12,8 +12,8 @@ using TiendaOnline.Data;
 namespace TiendaOnline.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240922044714_PrimeraMigracion")]
-    partial class PrimeraMigracion
+    [Migration("20240924193710_MigracionInicial")]
+    partial class MigracionInicial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -122,7 +122,8 @@ namespace TiendaOnline.Migrations
 
                     b.Property<string>("Estado")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<DateTime>("Fecha")
                         .HasColumnType("datetime2");
@@ -222,6 +223,9 @@ namespace TiendaOnline.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UsuarioId"));
+
+                    b.Property<decimal>("Balance")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("CodigoPostal")
                         .IsRequired()

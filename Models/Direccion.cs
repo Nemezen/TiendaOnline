@@ -14,10 +14,10 @@ namespace TiendaOnline.Models
         [Required]
         [StringLength(10)]
         public required string CodigoPostal { get; set; }
-        [Required]
+        [Required]  
         public int UsuarioId { get; set; }
         [ForeignKey("UsuarioId")]
-        public Usuario? Usuario { get; set; }
+        public required Usuario Usuario { get; set; }
         
     }
 }

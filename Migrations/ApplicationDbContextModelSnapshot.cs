@@ -119,7 +119,8 @@ namespace TiendaOnline.Migrations
 
                     b.Property<string>("Estado")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<DateTime>("Fecha")
                         .HasColumnType("datetime2");
@@ -219,6 +220,9 @@ namespace TiendaOnline.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UsuarioId"));
+
+                    b.Property<decimal>("Balance")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("CodigoPostal")
                         .IsRequired()

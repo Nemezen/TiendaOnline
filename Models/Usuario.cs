@@ -1,8 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.Identity.Client;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TiendaOnline.Models
 {
+    //La clase usuario cuenta con ID, Nombre, Telefono, Nombre de usuario, Contraseña, Correo, Domicilio, Estado, Codigo postal, Saldo
     public class Usuario
     {
         public Usuario() 
@@ -42,6 +44,7 @@ namespace TiendaOnline.Models
         public required Rol Rol { get; set; }
         public ICollection<Pedido> Pedidos { get; set; }
         [InverseProperty("Usuario")]
-        public required ICollection<Direccion> Direcciones   { get; set; }   
+        public required ICollection<Direccion> Direcciones   { get; set; }
+        public decimal Balance { get; set; }  
     }
 }
