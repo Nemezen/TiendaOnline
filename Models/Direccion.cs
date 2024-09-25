@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TiendaOnline.Models
@@ -7,17 +7,23 @@ namespace TiendaOnline.Models
     {
         [Key]
         public int DireccionId { get; set; }
-        [Required(ErrorMessage = "El campo Direccion es obligatorio!")]
+
+        [Required]
         [StringLength(50)]
-        public required string Domicilio { get; set; }
-        public required string Estado { get; set; }
+        public string Address { get; set; } = null!;
+
+        [Required]
+        [StringLength(20)]
+        public string Estado { get; set; } = null!;
+
         [Required]
         [StringLength(10)]
-        public required string CodigoPostal { get; set; }
-        [Required]  
+        public string CodigoPostal { get; set; } = null!;
+
+        [Required]
         public int UsuarioId { get; set; }
+
         [ForeignKey("UsuarioId")]
-        public required Usuario Usuario { get; set; }
-        
+        public Usuario Usuario { get; set; } = null!;
     }
 }

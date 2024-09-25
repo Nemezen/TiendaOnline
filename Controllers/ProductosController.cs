@@ -55,8 +55,12 @@ namespace TiendaOnline.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ProductoId,Codigo,Nombre,Modelo,Descripcion,Precio,Imagen,CategoriaId,Stock,Marca,Activo")] Producto producto)
         {
-            if (ModelState.IsValid)
+            var cat = await _context.Categorias.Where(c => c.CategoriaId == producto.CategoriaId).FirstOrDefaultAsync();
+   
+            if (cat != null)
             {
+                producto.Categoria = cat;
+                Console.WriteLine(producto.Categoria.CategoriaId);
                 _context.Add(producto);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -94,7 +98,9 @@ namespace TiendaOnline.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            var cat = await _context.Categorias.Where(c => c.CategoriaId == producto.CategoriaId).FirstOrDefaultAsync();
+            Console.WriteLine(cat.Descripcion.ToString());
+            if (cat != null) 
             {
                 try
                 {

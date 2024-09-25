@@ -12,8 +12,8 @@ using TiendaOnline.Data;
 namespace TiendaOnline.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240924193710_MigracionInicial")]
-    partial class MigracionInicial
+    [Migration("20240924224437_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -35,13 +35,13 @@ namespace TiendaOnline.Migrations
 
                     b.Property<string>("Descripcion")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("Nombre")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("CategoriaId");
 
@@ -85,19 +85,20 @@ namespace TiendaOnline.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DireccionId"));
 
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
                     b.Property<string>("CodigoPostal")
                         .IsRequired()
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
-                    b.Property<string>("Domicilio")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
                     b.Property<string>("Estado")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<int>("UsuarioId")
                         .HasColumnType("int");
@@ -122,8 +123,7 @@ namespace TiendaOnline.Migrations
 
                     b.Property<string>("Estado")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("Fecha")
                         .HasColumnType("datetime2");
@@ -162,8 +162,8 @@ namespace TiendaOnline.Migrations
 
                     b.Property<string>("Descripcion")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("Imagen")
                         .IsRequired()
@@ -242,15 +242,15 @@ namespace TiendaOnline.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<string>("Domicilio")
+                    b.Property<string>("Direccion")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Estado")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("Nombre")
                         .IsRequired()
@@ -280,13 +280,13 @@ namespace TiendaOnline.Migrations
             modelBuilder.Entity("TiendaOnline.Models.Detalle_Pedido", b =>
                 {
                     b.HasOne("TiendaOnline.Models.Pedido", "Pedido")
-                        .WithMany("Detalles_Pedido")
+                        .WithMany("DetallesPedido")
                         .HasForeignKey("PedidoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("TiendaOnline.Models.Producto", "Producto")
-                        .WithMany("Detalles_Pedido")
+                        .WithMany("DetallesPedido")
                         .HasForeignKey("ProductoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -347,12 +347,12 @@ namespace TiendaOnline.Migrations
 
             modelBuilder.Entity("TiendaOnline.Models.Pedido", b =>
                 {
-                    b.Navigation("Detalles_Pedido");
+                    b.Navigation("DetallesPedido");
                 });
 
             modelBuilder.Entity("TiendaOnline.Models.Producto", b =>
                 {
-                    b.Navigation("Detalles_Pedido");
+                    b.Navigation("DetallesPedido");
                 });
 
             modelBuilder.Entity("TiendaOnline.Models.Usuario", b =>

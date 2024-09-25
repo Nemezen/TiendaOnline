@@ -53,7 +53,7 @@ namespace TiendaOnline.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UsuarioId,Nombre,Telefono,NombreUsuario,Contrasenia,Correo,Domicilio,Estado,CodigoPostal,RolId,Balance")] Usuario usuario)
+        public async Task<IActionResult> Create([Bind("UsuarioId,Nombre,Telefono,NombreUsuario,Contrasenia,Correo,Direccion,Estado,CodigoPostal,RolId,Balance")] Usuario usuario)
         {
             if (ModelState.IsValid)
             {
@@ -87,7 +87,7 @@ namespace TiendaOnline.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UsuarioId,Nombre,Telefono,NombreUsuario,Contrasenia,Correo,Domicilio,Estado,CodigoPostal,RolId,Balance")] Usuario usuario)
+        public async Task<IActionResult> Edit(int id, [Bind("UsuarioId,Nombre,Telefono,NombreUsuario,Contrasenia,Correo,Direccion,Estado,CodigoPostal,RolId,Balance")] Usuario usuario)
         {
             if (id != usuario.UsuarioId)
             {

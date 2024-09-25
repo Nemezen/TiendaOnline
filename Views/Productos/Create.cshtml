@@ -10,59 +10,65 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Create" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <!-- Campos del Producto -->
             <div class="form-group">
                 <label asp-for="Codigo" class="control-label"></label>
-                <input asp-for="Codigo" class="form-control" />
+                <input asp-for="Codigo" class="form-control" id="Codigo" />
                 <span asp-validation-for="Codigo" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Nombre" class="control-label"></label>
-                <input asp-for="Nombre" class="form-control" />
+                <input asp-for="Nombre" class="form-control" id="Nombre" />
                 <span asp-validation-for="Nombre" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Modelo" class="control-label"></label>
-                <input asp-for="Modelo" class="form-control" />
+                <input asp-for="Modelo" class="form-control" id="Modelo" />
                 <span asp-validation-for="Modelo" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Descripcion" class="control-label"></label>
-                <input asp-for="Descripcion" class="form-control" />
+                <input asp-for="Descripcion" class="form-control" id="Descripcion" />
                 <span asp-validation-for="Descripcion" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Precio" class="control-label"></label>
-                <input asp-for="Precio" class="form-control" />
+                <input asp-for="Precio" class="form-control" id="Precio" />
                 <span asp-validation-for="Precio" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Imagen" class="control-label"></label>
-                <input asp-for="Imagen" class="form-control" />
+                <input asp-for="Imagen" class="form-control" id="Imagen" />
                 <span asp-validation-for="Imagen" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="CategoriaId" class="control-label"></label>
-                <select asp-for="CategoriaId" class ="form-control" asp-items="ViewBag.CategoriaId"></select>
+                <select asp-for="CategoriaId" class="form-control" asp-items="ViewBag.CategoriaId" id="CategoriaId"></select>
             </div>
             <div class="form-group">
                 <label asp-for="Stock" class="control-label"></label>
-                <input asp-for="Stock" class="form-control" />
+                <input asp-for="Stock" class="form-control" id="Stock" />
                 <span asp-validation-for="Stock" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Marca" class="control-label"></label>
-                <input asp-for="Marca" class="form-control" />
+                <input asp-for="Marca" class="form-control" id="Marca" />
                 <span asp-validation-for="Marca" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Activo" /> @Html.DisplayNameFor(model => model.Activo)
+                    <input class="form-check-input" asp-for="Activo" id="Activo" /> @Html.DisplayNameFor(model => model.Activo)
                 </label>
             </div>
+
+            <!-- Campo oculto que contendrá el string con todos los datos -->
+            <input type="hidden" id="Jsonproducto" name="Jsonproducto" />
+
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Create" class="btn btn-primary" onclick="concatData()" />
             </div>
         </form>
     </div>
@@ -73,5 +79,38 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script type="text/javascript">
+        function concatData() {
+            var codigo = document.getElementById("Codigo").value;
+            var nombre = document.getElementById("Nombre").value;
+            var modelo = document.getElementById("Modelo").value;
+            var descripcion = document.getElementById("Descripcion").value;
+            var precio = parseFloat(document.getElementById("Precio").value);
+            var imagen = document.getElementById("Imagen").value;
+            var categoriaId = parseInt(document.getElementById("CategoriaId").value)// Convertir a número o usar 0 si NaN
+            var stock = parseInt(document.getElementById("Stock").value)// Convertir a número o usar 0 si NaN
+            var marca = document.getElementById("Marca").value;
+            var activo = document.getElementById("Activo").checked;
+
+            // Convertimos los datos a un formato JSON
+            var Jsonproducto = JSON.stringify({
+                Codigo: codigo,
+                Nombre: nombre,
+                Modelo: modelo,
+                Descripcion: descripcion,
+                Precio: precio,
+                Imagen: imagen,
+                CategoriaId: categoriaId,
+                Stock: stock,
+                Marca: marca,
+                Activo: activo
+            });
+
+            // Asignamos el string JSON al campo oculto
+            document.getElementById("Jsonproducto").value = Jsonproducto;
+        }
+    </script>
 }

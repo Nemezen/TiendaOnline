@@ -34,7 +34,7 @@ namespace TiendaOnline.Data
 
             // Relación Producto -> Detalles_Pedido
             modelBuilder.Entity<Producto>()
-                .HasMany(p => p.Detalles_Pedido)//Referencia a ICollection de Producto
+                .HasMany(p => p.DetallesPedido)//Referencia a ICollection de Producto
                 .WithOne(dp => dp.Producto)
                 .HasForeignKey(dp => dp.ProductoId)
                 .OnDelete(DeleteBehavior.Cascade);
@@ -45,7 +45,7 @@ namespace TiendaOnline.Data
 
             // Relación Pedido -> Detalles_Pedido
             modelBuilder.Entity<Pedido>()
-              .HasMany(p => p.Detalles_Pedido)
+              .HasMany(p => p.DetallesPedido)
               .WithOne(dp => dp.Pedido)
               .HasForeignKey(dp => dp.PedidoId)
               .OnDelete(DeleteBehavior.Cascade);

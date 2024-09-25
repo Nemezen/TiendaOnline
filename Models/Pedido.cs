@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TiendaOnline.Models
@@ -7,22 +7,26 @@ namespace TiendaOnline.Models
     {
         [Key]
         public int PedidoId { get; set; }
+
         [Required]
         public int UsuarioId { get; set; }
+
         [ForeignKey("UsuarioId")]
-        public required Usuario Usuario { get; set; }
+        public Usuario Usuario { get; set; } = null!;
+
         [Required]
-        public required DateTime Fecha {  get; set; }    
+        public DateTime Fecha { get; set; }
+
         [Required]
-        [StringLength(20)]
-        public required string Estado { get; set; }
+        public string Estado { get; set; } = null!;
+
         [Required]
         public int DireccionIdSeleccionada { get; set; }
-        [Required]
-        public required Direccion Direccion { get; set; }
+        public Direccion Direccion { get; set; } = null!;
+
         [Required]
         public decimal Total { get; set; }
-        [Required]
-        public required ICollection<Detalle_Pedido> Detalles_Pedido { get; set; }
+
+        public ICollection<Detalle_Pedido> DetallesPedido { get; set; } = null!;
     }
 }

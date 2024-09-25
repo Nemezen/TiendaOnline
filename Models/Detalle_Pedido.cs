@@ -1,4 +1,3 @@
-﻿using Microsoft.AspNetCore.Routing.Constraints;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -8,17 +7,23 @@ namespace TiendaOnline.Models
     {
         [Key]
         public int DetallePedidoId { get; set; }
+
         [Required]
         public int PedidoId { get; set; }
+
         [ForeignKey("PedidoId")]
-        public required Pedido Pedido { get; set; }
+        public Pedido Pedido { get; set; } = null!;
+
         [Required]
-        public int ProductoId { get; set; } 
+        public int ProductoId { get; set; }
+
         [ForeignKey("ProductoId")]
-        public required Producto Producto { get; set; }
-        public int Cantidad { get; set; }   
+        public Producto Producto { get; set; } = null!;
+
+        [Required]
+        public int Cantidad { get; set; }
+
         [Required]
         public decimal Precio { get; set; }
-
     }
 }

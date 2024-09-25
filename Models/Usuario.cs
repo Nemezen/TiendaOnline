@@ -1,50 +1,60 @@
-﻿using Microsoft.Identity.Client;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TiendaOnline.Models
 {
-    //La clase usuario cuenta con ID, Nombre, Telefono, Nombre de usuario, Contraseña, Correo, Domicilio, Estado, Codigo postal, Saldo
     public class Usuario
     {
-        public Usuario() 
-        { 
-            Pedidos = new List<Pedido>();            
+        public Usuario()
+        {
+            Pedidos = new List<Pedido>();
         }
+
         [Key]
         public int UsuarioId { get; set; }
-        [Required(ErrorMessage = "El campo Nombre es obligatorio!")]
+
+        [Required]
         [StringLength(50)]
-        public required string Nombre { get; set; }
+        public string Nombre { get; set; } = null!;
+
         [Required]
         [StringLength(15)]
-        public required string Telefono{ get; set; }
+        public string Telefono { get; set; } = null!;
+
         [Required]
         [StringLength(50)]
-        public required string NombreUsuario { get; set; }
+        public string NombreUsuario { get; set; } = null!;
+
         [Required]
         [StringLength(255)]
-        public required string Contrasenia { get; set; }
+        public string Contrasenia { get; set; } = null!;
+
         [Required]
         [StringLength(255)]
-        public required string Correo { get; set; }
+        public string Correo { get; set; } = null!;
+
         [Required]
-        [StringLength(50)]
-        public required string Domicilio { get; set; }
+        [StringLength(100)]
+        public string Direccion { get; set; } = null!;
+
         [Required]
-        [StringLength(50)]
-        public required string Estado { get; set; }
+        [StringLength(20)]
+        public string Estado { get; set; } = null!;
+
         [Required]
         [StringLength(10)]
-        public required string CodigoPostal { get; set; }
+        public string CodigoPostal { get; set; } = null!;
+
         [Required]
         public int RolId { get; set; }
-        
+
         [ForeignKey("RolId")]
-        public required Rol Rol { get; set; }
+        public Rol Rol { get; set; } = null!;
         public ICollection<Pedido> Pedidos { get; set; }
+
         [InverseProperty("Usuario")]
-        public required ICollection<Direccion> Direcciones   { get; set; }
-        public decimal Balance { get; set; }  
+        public ICollection<Direccion> Direcciones { get; set; } = null!;
+        [Required]
+        public decimal Balance { get; set; }
     }
 }

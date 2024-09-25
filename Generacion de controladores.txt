@@ -5,6 +5,3 @@ dotnet aspnet-codegenerator controller -name ProductosController -m Producto -dc
 dotnet aspnet-codegenerator controller -name CategoriasController -m Categoria -dc ApplicationDbContext --relativeFolderPath Controllers --useDefaultLayout --referenceScriptLibraries
 dotnet aspnet-codegenerator controller -name RolesController -m Rol -dc ApplicationDbContext --relativeFolderPath Controllers --useDefaultLayout --referenceScriptLibraries
 dotnet aspnet-codegenerator controller -name UsuariosController -m Usuario -dc ApplicationDbContext --relativeFolderPath Controllers --useDefaultLayout --referenceScriptLibraries
-
-
-
