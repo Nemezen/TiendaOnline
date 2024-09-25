@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using System.Text.Json;
 using TiendaOnline.Data;
 using TiendaOnline.Models;
 
@@ -53,17 +55,36 @@ namespace TiendaOnline.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductoId,Codigo,Nombre,Modelo,Descripcion,Precio,Imagen,CategoriaId,Stock,Marca,Activo")] Producto producto)
+        public async Task<IActionResult> Create(String Jsonproducto)
         {
-            var cat = await _context.Categorias.Where(c => c.CategoriaId == producto.CategoriaId).FirstOrDefaultAsync();
-   
-            if (cat != null)
+            Console.WriteLine(Jsonproducto.ToString());
+            if (string.IsNullOrEmpty(Jsonproducto))
             {
-                producto.Categoria = cat;
-                Console.WriteLine(producto.Categoria.CategoriaId);
-                _context.Add(producto);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                ModelState.AddModelError(string.Empty, "Los datos del producto no pueden estar vacíos.");
+                return View();
+            }
+            var producto = JsonConvert.DeserializeObject<Producto>(Jsonproducto);
+
+            try
+            {
+                // Suponiendo que el string es un JSON que representa el objeto Producto
+                var cat = await _context.Categorias.FirstOrDefaultAsync(c => c.CategoriaId == producto.CategoriaId);
+                if (producto != null)
+                {
+                    // Puedes hacer validaciones adicionales aquí
+                    producto.Categoria = cat;
+                    _context.Add(producto);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Error al procesar los datos del producto.");
+                }
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, $"Error: {ex.Message}");
             }
             ViewData["CategoriaId"] = new SelectList(_context.Categorias, "CategoriaId", "Descripcion", producto.CategoriaId);
             return View(producto);
