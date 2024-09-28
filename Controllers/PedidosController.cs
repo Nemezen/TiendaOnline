@@ -6,13 +6,12 @@ using TiendaOnline.Models;
 
 namespace TiendaOnline.Controllers
 {
-    public class PedidosController : Controller
+    public class PedidosController : BaseController
     {
-        private readonly ApplicationDbContext _context;
+  
 
-        public PedidosController(ApplicationDbContext context)
+        public PedidosController(ApplicationDbContext context) : base(context)
         {
-            _context = context;
         }
 
         // GET: Pedidos
@@ -32,13 +31,15 @@ namespace TiendaOnline.Controllers
 
             var pedido = await _context.Pedidos
                 .Include(p => p.Usuario)
+                .Include(p => p.DetallesPedido)
+                .ThenInclude(dp => dp.Producto)
                 .FirstOrDefaultAsync(m => m.PedidoId == id);
             if (pedido == null)
             {
                 return NotFound();
             }
-
-            return View(pedido);
+            pedido.Direccion = await _context.Direcciones.FirstOrDefaultAsync(d => d.DireccionId == pedido.DireccionIdSeleccionada) ?? new Direccion();
+            return View(pedido); 
         }
 
         // GET: Pedidos/Create

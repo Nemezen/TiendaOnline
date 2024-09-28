@@ -14,7 +14,7 @@ namespace TiendaOnline.Models
 
         [Required(ErrorMessage = "El campo Nombre es obligatorio")]
         [StringLength(255)]
-        public required string Nombre { get; set; }
+        public string Nombre { get; set; } = null!;
 
         [Required(ErrorMessage = "El campo Modelo es obligatorio")]
         [StringLength(255)]

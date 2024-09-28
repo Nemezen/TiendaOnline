@@ -6,13 +6,10 @@ using TiendaOnline.Models;
 
 namespace TiendaOnline.Controllers
 {
-    public class DetallesPedidosController : Controller
+    public class DetallesPedidosController : BaseController
     {
-        private readonly ApplicationDbContext _context;
-
-        public DetallesPedidosController(ApplicationDbContext context)
-        {
-            _context = context;
+        public DetallesPedidosController(ApplicationDbContext context) : base(context)
+        { 
         }
 
         // GET: DetallesPedidos

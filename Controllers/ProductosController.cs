@@ -8,13 +8,10 @@ using TiendaOnline.Models;
 
 namespace TiendaOnline.Controllers
 {
-    public class ProductosController : Controller
+    public class ProductosController : BaseController
     {
-        private readonly ApplicationDbContext _context;
-
-        public ProductosController(ApplicationDbContext context)
+        public ProductosController(ApplicationDbContext context) : base(context)
         {
-            _context = context;
         }
 
         // GET: Productos
@@ -46,7 +43,7 @@ namespace TiendaOnline.Controllers
         // GET: Productos/Create
         public IActionResult Create()
         {
-            ViewData["CategoriaId"] = new SelectList(_context.Categorias, "CategoriaId", "Descripcion");
+            ViewData["CategoriaId"] = new SelectList(_context.Categorias, "CategoriaId", "Nombre");
             return View();
         }
 
@@ -64,13 +61,15 @@ namespace TiendaOnline.Controllers
                 return View();
             }
             var producto = JsonConvert.DeserializeObject<Producto>(Jsonproducto);
-
             try
             {
-                // Suponiendo que el string es un JSON que representa el objeto Producto
-                var cat = await _context.Categorias.FirstOrDefaultAsync(c => c.CategoriaId == producto.CategoriaId);
                 if (producto != null)
                 {
+                    var cat = await _context.Categorias.FirstOrDefaultAsync(c => c.CategoriaId == producto.CategoriaId);
+                    if (cat == null)
+                    {
+                        return BadRequest("Categoría no encontrada.");
+                    }
                     // Puedes hacer validaciones adicionales aquí
                     producto.Categoria = cat;
                     _context.Add(producto);

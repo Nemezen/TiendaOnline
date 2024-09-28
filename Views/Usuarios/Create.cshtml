@@ -61,8 +61,11 @@
                 <input asp-for="Balance" class="form-control" />
                 <span asp-validation-for="Balance" class="text-danger"></span>
             </div>
+            <!-- Campo oculto que contendrá el string con todos los datos -->
+            <input type="hidden" id="Jsonusuario" name="Jsonusuario" />
+
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Create" class="btn btn-primary" onclick="concatData()" />
             </div>
         </form>
     </div>
@@ -73,5 +76,38 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script type="text/javascript">
+        function concatData() {
+            var nombre = document.getElementById("Nombre").value;
+            var telefono = document.getElementById("Telefono").value;
+            var nombreusuario = document.getElementById("NombreUsuario").value;
+            var contrasenia = document.getElementById("Contrasenia").value;
+            var correo = document.getElementById("Correo").value;
+            var direccion = document.getElementById("Direccion").value;
+            var estado = document.getElementById("Estado").value
+            var codigopostal = document.getElementById("CodigoPostal").value
+            var rolId = parseInt(document.getElementById("RolId").value);
+            var balance = parseFloat(document.getElementById("Balance").value);
+
+            // Convertimos los datos a un formato JSON
+            var Jsonusuario = JSON.stringify({
+                Nombre: nombre,
+                Telefono: telefono,
+                NombreUsuario: nombreusuario,
+                Contrasenia: contrasenia,
+                Correo: correo,
+                Direccion: direccion,
+                Estado: estado,
+                CodigoPostal: codigopostal,
+                RolId: rolId,
+                Balance: balance
+            });
+
+            // Asignamos el string JSON al campo oculto
+            document.getElementById("Jsonusuario").value = Jsonusuario;
+        }
+    </script>
 }

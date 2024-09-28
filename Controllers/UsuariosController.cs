@@ -1,18 +1,16 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using TiendaOnline.Data;
 using TiendaOnline.Models;
 
 namespace TiendaOnline.Controllers
 {
-    public class UsuariosController : Controller
+    public class UsuariosController : BaseController
     {
-        private readonly ApplicationDbContext _context;
-
-        public UsuariosController(ApplicationDbContext context)
+        public UsuariosController(ApplicationDbContext context) : base(context)
         {
-            _context = context;
         }
 
         // GET: Usuarios
@@ -53,13 +51,38 @@ namespace TiendaOnline.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UsuarioId,Nombre,Telefono,NombreUsuario,Contrasenia,Correo,Direccion,Estado,CodigoPostal,RolId,Balance")] Usuario usuario)
+        public async Task<IActionResult> Create(String Jsonusuario)
         {
-            if (ModelState.IsValid)
+            Console.WriteLine(Jsonusuario.ToString());
+            if (string.IsNullOrEmpty(Jsonusuario))
             {
+                ModelState.AddModelError(string.Empty, "Los datos del usuario no pueden estar vacíos.");
+                return View();
+            }
+            var usuario = JsonConvert.DeserializeObject<Usuario>(Jsonusuario);
+
+            if (usuario != null)
+            {
+                var rol = await _context.Roles.FirstOrDefaultAsync(c => c.RolId == usuario.RolId);
+                if (rol == null)
+                {
+                    return BadRequest("Rol no encontrado.");
+                }
+                usuario.Direcciones = new List<Direccion> { 
+                    new Direccion{
+                        Address = usuario.Direccion,
+                        Estado = usuario.Estado,
+                        CodigoPostal = usuario.CodigoPostal,
+                    }
+                };
+                usuario.Rol = rol;
                 _context.Add(usuario);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                ModelState.AddModelError(string.Empty, "Error al procesar los datos del producto.");
             }
             ViewData["RolId"] = new SelectList(_context.Roles, "RolId", "Nombre", usuario.RolId);
             return View(usuario);
@@ -93,26 +116,50 @@ namespace TiendaOnline.Controllers
             {
                 return NotFound();
             }
-
-            if (ModelState.IsValid)
+            var rol = await _context.Roles.FirstOrDefaultAsync(c => c.RolId == usuario.RolId);
+            if (rol != null)//Comprueba que la variable rol no sea null, esto garantiza que no el campo por seleccionar Rol sin seleccionar y a su vez, que no quede vacio el campo.
             {
-                try
+                usuario.Rol = rol;
+
+                var existingUser = await _context.Usuarios//Se declara una variable existingUser, su funcion es asignar un ICollection de usuarios donde se guarda el ID y las direcciones del usuario
+                    .Include(u => u.Direcciones)
+                    .FirstOrDefaultAsync(u => u.UsuarioId == id);
+                if (existingUser != null)//Mientras exista el id del usuario dentro de la base de datos
                 {
-                    _context.Update(usuario);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UsuarioExists(usuario.UsuarioId))
+                    if (existingUser.Direcciones.Count > 0)//En caso de que exista una direccion, se agrega la nueva direccion al ICollection
                     {
-                        return NotFound();
+                        var direccion = existingUser.Direcciones.First();
+                        direccion.Address = usuario.Direccion;
+                        direccion.Estado = usuario.Estado;
+                        direccion.CodigoPostal = usuario.CodigoPostal;
                     }
-                    else
+                    else//En caso de que no exista una direccion para el usuario a editar, se crea una nueva direccion
                     {
-                        throw;
+                        existingUser.Direcciones = new List<Direccion>
+                        {
+                            new Direccion
+                            {
+                                Address = usuario.Direccion,
+                                Estado = usuario.Estado,
+                                CodigoPostal = usuario.CodigoPostal,
+                            }
+                        };
                     }
+                    try
+                    {
+                        _context.Update(existingUser);
+                        await _context.SaveChangesAsync();
+                    }
+                    catch (DbUpdateConcurrencyException ex)
+                    {
+                        if (!UsuarioExists(usuario.UsuarioId))
+                        {
+                            ModelState.AddModelError(string.Empty, "No se pudieron guardar los cambios " + ex);
+                            throw;
+                        }       
+                    }
+                    return RedirectToAction(nameof(Index));
                 }
-                return RedirectToAction(nameof(Index));
             }
             ViewData["RolId"] = new SelectList(_context.Roles, "RolId", "Nombre", usuario.RolId);
             return View(usuario);

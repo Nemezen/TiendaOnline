@@ -1,0 +1,22 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Dashboard";
+}
+<div class="container mt-4">
+    <h1 class="mb-4">Bienvenido al Dashboard</h1>
+    <p class="lead">Aqui se encuentran los enelaces a los indices del resto de los controladores</p>
+    <div class="list-group">
+        @*ENLACES A LOS INDICES DE LOS DEMAS CONTROLADORES*@
+        <a href="@Url.Action("Index","Usuarios")" class="list-group-item list-group-item-action">Usuarios</a>
+        <a href="@Url.Action("Index","Roles")" class="list-group-item list-group-item-action">Roles</a>
+        <a href="@Url.Action("Index","Productos")" class="list-group-item list-group-item-action">Productos</a>
+        <a href="@Url.Action("Index","Pedidos")" class="list-group-item list-group-item-action">Pedidos</a>
+        <a href="@Url.Action("Index","Direcciones")" class="list-group-item list-group-item-action">Direcciones</a>
+        <a href="@Url.Action("Index","DetallesPedidos")" class="list-group-item list-group-item-action">Detalles de los Pedidos</a>
+        <a href="@Url.Action("Index","Categorias")" class="list-group-item list-group-item-action">Categorias</a>
+
+
+    </div>
+</div>

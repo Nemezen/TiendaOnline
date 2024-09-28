@@ -10,13 +10,10 @@ using TiendaOnline.Models;
 
 namespace TiendaOnline.Controllers
 {
-    public class DireccionesController : Controller
+    public class DireccionesController : BaseController
     {
-        private readonly ApplicationDbContext _context;
-
-        public DireccionesController(ApplicationDbContext context)
+        public DireccionesController(ApplicationDbContext context) : base(context)
         {
-            _context = context;
         }
 
         // GET: Direcciones
