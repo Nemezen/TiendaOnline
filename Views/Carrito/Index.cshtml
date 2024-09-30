@@ -103,12 +103,8 @@ else
                     @foreach (var direccion in Model.Direcciones)
                     {
                         <div class="form-check">
-                            <input type="radio" name="direccionIdSeleccionada"
-                                class="form-check-input" value="@direccion.DireccionId"
-                                id="@direccion.DireccionId" for="@direccion.DireccionId"
-                                required />
-                            <label class="form-check-label" for="@direccion.DireccionId">
-                                @direccion.Address, @direccion.Estado,@direccion.CodigoPostal
+                            <input type="radio" name="direccionIdSeleccionada" class="form-check-input" value="@direccion.DireccionId" id="@direccion.DireccionId" for="@direccion.DireccionId" required />
+                            <label class="form-check-label" for="@direccion.DireccionId"> @direccion.Address, @direccion.Estado,@direccion.CodigoPostal
                             </label>
                         </div>
                     }
