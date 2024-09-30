@@ -42,7 +42,7 @@ namespace TiendaOnline.Controllers
             return View(producto);
         }
 
-        public async Task<IActionResult> Productos(int? categoriaId, string? busqueda, int pagina)
+        public async Task<IActionResult> Productos(int? categoriaId, string? busqueda, int pagina=1)
         {
             try
             {
@@ -50,7 +50,7 @@ namespace TiendaOnline.Controllers
                 var model = await _productoService.GetProductosPaginados(categoriaId, busqueda, pagina, productosPorPagina);
                 ViewBag.Categorias = await _categoriaService.GetCategorias();
 
-                if (Request.Headers["X-Request-Width"] == "XMLHttpRequest")
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
                 {
                     //se utiliza en esta ocasion partialview para evitar sobrecargar las vistas
                     return PartialView("_ProductosPartial", model);

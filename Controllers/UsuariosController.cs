@@ -119,8 +119,6 @@ namespace TiendaOnline.Controllers
             var rol = await _context.Roles.FirstOrDefaultAsync(c => c.RolId == usuario.RolId);
             if (rol != null)//Comprueba que la variable rol no sea null, esto garantiza que no el campo por seleccionar Rol sin seleccionar y a su vez, que no quede vacio el campo.
             {
-                usuario.Rol = rol;
-
                 var existingUser = await _context.Usuarios//Se declara una variable existingUser, su funcion es asignar un ICollection de usuarios donde se guarda el ID y las direcciones del usuario
                     .Include(u => u.Direcciones)
                     .FirstOrDefaultAsync(u => u.UsuarioId == id);
@@ -145,6 +143,14 @@ namespace TiendaOnline.Controllers
                             }
                         };
                     }
+                    existingUser.Rol = rol;
+                    existingUser.RolId = usuario.RolId;
+                    existingUser.Nombre = usuario.Nombre;
+                    existingUser.Telefono = usuario.Telefono;
+                    existingUser.NombreUsuario = usuario.NombreUsuario;
+                    existingUser.Contrasenia = usuario.Contrasenia;
+                    existingUser.Correo = usuario.Correo;
+                    existingUser.Balance = usuario.Balance;
                     try
                     {
                         _context.Update(existingUser);

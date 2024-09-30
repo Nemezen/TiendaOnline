@@ -24,7 +24,7 @@ namespace TiendaOnline.Controllers
             return base.View(viewName, model);
         }
 
-        private int GetCarritoCount()
+        protected int GetCarritoCount()
         {
             int count = 0;
             string? carritoJson = Request.Cookies["carrito"];
@@ -75,7 +75,7 @@ namespace TiendaOnline.Controllers
         }
 
         //Devuelve una lista del ID del producto y sus cantidad para actualizar el carrito que esta en la cookie (json)
-        private async Task UpdateCarritoViewModelAsync(CarritoViewModel carritoViewModel)
+        public async Task UpdateCarritoViewModelAsync(CarritoViewModel carritoViewModel)
         {
             var productoIds = carritoViewModel.Items.Select(
                 item=>new ProductoIdAndCantidad
@@ -90,7 +90,7 @@ namespace TiendaOnline.Controllers
 
         }
 
-        private async Task<CarritoViewModel> GetCarritoViewModelAsync()
+        public async Task<CarritoViewModel> GetCarritoViewModelAsync()
         {
             var carritoJson = Request.Cookies["carrito"];
             if (string.IsNullOrEmpty(carritoJson))

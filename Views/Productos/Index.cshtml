@@ -28,7 +28,7 @@
                 @Html.DisplayNameFor(model => model.Precio)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Imagen)
+                @Html.DisplayNameFor(model => model.Imagen).
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Categoria)
@@ -64,7 +64,11 @@
                 @Html.DisplayFor(modelItem => item.Precio)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Imagen)
+                @{
+                    var url = item.Imagen;
+                    var shortenedUrl = url.Length > 30 ? url.Substring(0, 30) + "..." : url;
+                }
+                @shortenedUrl
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Categoria.Descripcion)

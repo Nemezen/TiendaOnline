@@ -8,10 +8,12 @@ namespace TiendaOnline.Services
     public class ProductoService : IProductoService
     {
         private readonly ApplicationDbContext _context;
+
         public ProductoService(ApplicationDbContext context)
         {
             _context = context;
         }
+
         public Producto GetProducto(int id)
         {
             var producto = _context.Productos
@@ -32,35 +34,44 @@ namespace TiendaOnline.Services
             List<Producto> productosDestacados = await productosQuery.Take(9).ToListAsync();
             return productosDestacados;
         }
-        //cambiar a json las variables recibidas con un string
-        public async Task<ProductosPaginadosViewModel> GetProductosPaginados(int? categoriaId, string? busqueda, int pagina, int productosPorPagina)
+
+        public async Task<ProductosPaginadosViewModel> GetProductosPaginados(
+            int? categoriaId,
+            string? busqueda,
+            int pagina,
+            int productosPorPagina
+        )
         {
             IQueryable<Producto> query = _context.Productos;
             query = query.Where(p => p.Activo);
 
             if (categoriaId.HasValue)
                 query = query.Where(p => p.CategoriaId == categoriaId);
+
             if (!string.IsNullOrEmpty(busqueda))
-                query = query.Where(p => p.Nombre.Contains(busqueda) || p.Descripcion.Contains(busqueda));
+                query = query.Where(
+                    p => p.Nombre.Contains(busqueda) || p.Descripcion.Contains(busqueda)
+                );
             int totalProductos = await query.CountAsync();
 
             int totalPaginas = (int)Math.Ceiling((double)totalProductos / productosPorPagina);
 
             if (pagina < 1)
                 pagina = 1;
-
             else if (pagina > totalPaginas)
                 pagina = totalPaginas;
+
             List<Producto> productos = new();
-            if (totalProductos > 0)//Si el total de productos es mayor a cero, se organiza la lista de productos ordenado por nombre, 
+            if (totalProductos > 0)
             {
                 productos = await query
-                    .OrderBy(productos => productos.Nombre)
+                    .OrderBy(p => p.Nombre)
                     .Skip((pagina - 1) * productosPorPagina)
                     .Take(productosPorPagina)
                     .ToListAsync();
             }
-            bool mostrarMensajeSinResultado = totalProductos == 0;
+
+            bool mostrarMensajeSinResultados = totalProductos == 0;
 
             var model = new ProductosPaginadosViewModel
             {
@@ -69,7 +80,7 @@ namespace TiendaOnline.Services
                 TotalPaginas = totalPaginas,
                 CategoriaIdSeleccionada = categoriaId,
                 Busqueda = busqueda,
-                MostrarMensajeSinResultados = mostrarMensajeSinResultado
+                MostrarMensajeSinResultados = mostrarMensajeSinResultados
             };
 
             return model;

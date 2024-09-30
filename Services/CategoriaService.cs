@@ -17,9 +17,6 @@ namespace TiendaOnline.Services
             return await _context.Categorias.ToListAsync();
         }
 
-        Task<List<Categoria>> ICategoriaService.GetCategorias()
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }
