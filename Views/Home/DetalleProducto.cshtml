@@ -1,4 +1,5 @@
-﻿@model Producto
+﻿@using System.Globalization
+@model Producto
 @{
     ViewData["Title"] = "Detalle del producto";
 }
@@ -15,7 +16,7 @@
         <div class="col-md-6">
             <h4>Modelo: @Model.Modelo</h4>
             <p>@Model.Descripcion</p>
-            <p>Precio: @String.Format("{0:C}", Model.Precio)</p>
+            <p>Precio: @String.Format(new CultureInfo("en-US"), "{0:C}", Model.Precio)</p>
             <p>Stock: @Model.Stock</p>
             <p>Categoria: @Model.Categoria.Nombre</p>
             <p>Marca: @Model.Marca</p>
