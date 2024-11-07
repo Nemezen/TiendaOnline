@@ -104,7 +104,7 @@ namespace TiendaOnline.Controllers
             }
             else
                 return View("Index");
-            
+               
             return View(PagoCompletado(montoTotal));
         }
         public IActionResult PagoCompletado(decimal montoTotal)
